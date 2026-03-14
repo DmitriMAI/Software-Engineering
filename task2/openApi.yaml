@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: Simple Hello API
+  description: API с приветственной ручкой
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: http://localhost:3000
+    description: Local development
+
+paths:
+  /hello:
+    get:
+      summary: Возвращает приветствие
+      description: Простой эндпоинт, который возвращает приветственное сообщение
+      operationId: getHello
+      tags:
+        - Greetings
+      parameters:
+        - name: name
+          in: query
+          description: Имя для персонализированного приветствия (опционально)
+          required: false
+          schema:
+            type: string
+            example: "Мир"
+      responses:
+        '200':
+          description: Успешный ответ с приветствием
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Приветственное сообщение
+                    example: "Привет, Мир!"
+                required:
+                  - message
+            text/plain:
+              schema:
+                type: string
+                example: "Привет, Мир!"
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Описание ошибки
+          example: "Произошла внутренняя ошибка сервера"
+        code:
+          type: integer
+          description: Код ошибки
+          example: 500
+      required:
+        - error

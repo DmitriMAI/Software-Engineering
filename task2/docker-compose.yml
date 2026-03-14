@@ -1,0 +1,36 @@
+version: '3.8'
+
+networks:
+  ip6net:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 2001:db8::/64
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+      args:
+        USER_UID: 1000
+        USER_GID: 1000
+    networks:
+      - ip6net
+    privileged: true  # Дает все права, но менее безопасно
+    entrypoint: /bin/bash
+    ports:
+      - "8080:8080"  # Проброс порта: хост:контейнер
+    # tty: true
+    # Том больше не нужен, так как файлы скопированы в образ
+    # Но если хотите live-reload при разработке, можно раскомментировать:
+    # volumes:
+    #   - ./some-service:/some-service
+    working_dir: /some-service
+    command: -c "make build-debug && make start-debug"
+  generating:
+    image: ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
+    networks:
+      - ip6net
+    tty: true
+    entrypoint: /bin/bash
