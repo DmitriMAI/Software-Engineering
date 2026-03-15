@@ -65,3 +65,15 @@ sudo apt-get install clangd-12
 
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-12 100
 // после установки в целом начал находить все и подсвечивать правильно.
+
+// Заставляем видеть все clangd сгенеренное и скачанное
+// Нужно при этом зайти в директорию билда (у меня на винде cmake-build-debug-wsl)
+mkdir cmake-build-debug-wsl
+cd cmake-build-debug-wsl
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+cd ..
+ln -s ./cmake-build-debug-wsl/compile_commands.json compile_commands.json
+
+pip install conan
+
+conda install conda-forge::jwt-cpp

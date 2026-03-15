@@ -27,10 +27,10 @@ services:
     # volumes:
     #   - ./some-service:/some-service
     working_dir: /some-service
-    command: -c "make build-debug && make start-debug"
-  generating:
-    image: ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
-    networks:
-      - ip6net
-    tty: true
-    entrypoint: /bin/bash
+    command: -c "make dist-clean && make build-debug && make start-debug"
+#  generating:
+#    image: ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
+#    networks:
+#      - ip6net
+#    tty: true
+#    entrypoint: /bin/bash

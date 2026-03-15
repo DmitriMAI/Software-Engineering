@@ -14,6 +14,20 @@ if(NOT userver_FOUND)
     download_userver(TRY_DIR third_party/userver)
 endif()
 
+#finding jwt-cpp
+find_package(jwt-cpp QUIET)
+if (NOT jwt-cpp_FOUND)
+    message("Loading JWT-CPP")
+    include(cmake/get_cpm.cmake)
+    # download jwt-cpp
+    CPMAddPackage(
+            NAME jwt-cpp
+            GITHUB_REPOSITORY Thalhammer/jwt-cpp
+            VERSION 0.7.2
+            OPTIONS "JWT_BUILD_EXAMPLES OFF" "JWT_BUILD_TESTS OFF" "JWT_CMAKE_FILES_INSTALL ON"
+    )
+endif()
+
 userver_setup_environment()
 
 # Common sources
@@ -23,16 +37,26 @@ add_library(
     ${PROJECT_NAME}_objs OBJECT
     src/greeting.cpp #
     src/hello.cpp #
+    src/controller/UserControllerHandler.cpp #
+    src/controller/UserControllerHandler.h
+        src/controller/TasksControllerHandler.cpp
+        src/controller/TasksControllerHandler.h
+        src/controller/GoalControllerHandler.cpp
+        src/controller/GoalControllerHandler.h #
 )
 target_link_libraries(
     ${PROJECT_NAME}_objs
     PUBLIC userver::core #
+    PUBLIC jwt-cpp::jwt-cpp #
 )
 
 
 # The Service
 add_executable(${PROJECT_NAME} src/main.cpp
-        src/greeting.cpp)
+        src/jwt_utils.cpp
+        src/jwt_utils.h
+        src/controller/AuthorizationControllerHandler.cpp
+        src/controller/AuthorizationControllerHandler.h)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
 
 # Unit Tests
