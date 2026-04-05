@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: API с приветственной ручкой
+  title: Simple Hello API
+  version: 1.0.0
+servers:
+- description: Production server
+  url: https://api.example.com/v1
+- description: Local development
+  url: http://localhost:3000
+paths:
+  /hello:
+    get:
+      description: "Простой эндпоинт, который возвращает приветственное сообщение"
+      operationId: getHello
+      parameters:
+      - description: Имя для персонализированного приветствия (опционально)
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          example: Мир
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getHello_200_response'
+            text/plain:
+              schema:
+                example: "Привет, Мир!"
+                type: string
+          description: Успешный ответ с приветствием
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Ошибка в запросе
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Внутренняя ошибка сервера
+      summary: Возвращает приветствие
+      tags:
+      - Greetings
+      x-accepts:
+      - application/json
+      - text/plain
+components:
+  schemas:
+    Error:
+      example:
+        code: 500
+        error: Произошла внутренняя ошибка сервера
+      properties:
+        error:
+          description: Описание ошибки
+          example: Произошла внутренняя ошибка сервера
+          type: string
+        code:
+          description: Код ошибки
+          example: 500
+          type: integer
+      required:
+      - error
+      type: object
+    getHello_200_response:
+      example:
+        message: "Привет, Мир!"
+      properties:
+        message:
+          description: Приветственное сообщение
+          example: "Привет, Мир!"
+          type: string
+      required:
+      - message
+      type: object
+

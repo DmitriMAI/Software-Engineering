@@ -1,0 +1,32 @@
+# Dockerfile
+FROM ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
+
+# Аргументы для создания пользователя
+ARG USERNAME=appuser
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+# Создаем группу и пользователя (не root)
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && rm -rf /var/lib/apt/lists/*
+
+# Создаем директорию для сервиса и устанавливаем права
+RUN mkdir -p /some-service && chown -R $USERNAME:$USERNAME /some-service
+
+# Копируем проект (предполагается, что контекст сборки - корень проекта)
+# Копируем только содержимое ./some-service из контекста сборки
+COPY --chown=$USERNAME:$USERNAME ./some-service /some-service/
+
+# Переключаемся на непривилегированного пользователя
+USER $USERNAME
+
+# Устанавливаем рабочую директорию
+WORKDIR /some-service
+
+# Команда по умолчанию (можно переопределить в docker-compose)
+CMD ["/bin/bash"]
