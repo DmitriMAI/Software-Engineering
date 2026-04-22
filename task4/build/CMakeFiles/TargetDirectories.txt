@@ -1,0 +1,7 @@
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/poco_template_server.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/edit_cache.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/rebuild_cache.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/list_install_components.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/install.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/install/local.dir
+/workspaces/architecture_python/02_rest_poco_server/build/CMakeFiles/install/strip.dir
